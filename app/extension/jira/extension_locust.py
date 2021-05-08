@@ -15,6 +15,8 @@ def app_specific_action(locust):
     # token = re.findall(token_pattern_example, content)  # get TOKEN from response using regexp
     # id = re.findall(id_pattern_example, content)    # get ID from response using regexp
 
+
+
     # logger.locust_info(f'token: {token}, id: {id}')  # log info for debug when verbose is true in jira.yml file
     # if 'assertion string' not in content:
     #     logger.error(f"'assertion string' was not found in {content}")
@@ -27,8 +29,16 @@ def app_specific_action(locust):
     # if 'assertion string after successful POST request' not in content:
     #     logger.error(f"'assertion string after successful POST request' was not found in {content}")
     # assert 'assertion string after successful POST request' in content  # assertion after POST request
-    locust.get('/rest/asanrest/1.0/message', catch_response=True).content.decode('utf-8')  # call app-specific GET endpoint
+    
+    locust.get('/rest/asanrest/1.0/message', catch_response=True)
 
-    body = {"value" : "10000"}  # include parsed variables to POST request body
+    value_pattern_example = '"value":"(.+?)"'
+    value = re.findall(value_pattern_example, content)
+
+    body = {"value" : value}
     headers = {'content-type': 'application/json'}
-    locust.post('/rest/asanrest/1.0/message/getAttachment', body, headers, catch_response=True).content.decode('utf-8')  # call app-specific POST endpoint
+    r = locust.post('/rest/asanrest/1.0/message/getAttachment', username='admin', password='admin', body, headers, catch_response=True) 
+    content = r.content.decode('utf-8')
+    if 'assertion string after successful POST request' not in content:
+        logger.error(f"'assertion string after successful POST request' was not found in {content}")
+    assert 'assertion string after successful POST request' in content  # assertion after POST request 
