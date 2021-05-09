@@ -11,6 +11,4 @@ def app_specific_action(locust):
 
     locust.get('/rest/asanrest/1.0/message', catch_response=True)
 
-    locust.post('/rest/asanrest/1.0/message/postTest', catch_response=True) 
-    
-
+    locust.post('/rest/asanrest/1.0/message/postTest', catch_response=True)
